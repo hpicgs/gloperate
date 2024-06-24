@@ -44,9 +44,10 @@ void ColorGradientTextureStage::onProcess()
 
     for (auto input : inputs())
     {
-        if (input->type() == typeid(ColorGradientList *))
+        auto * typedInput = dynamic_cast<Input<ColorGradientList *> *>(input);
+        if (typedInput)
         {
-            gradientLists.push_back(static_cast<Input<ColorGradientList *> *>(input)->value());
+            gradientLists.push_back(typedInput->value());
         }
     }
 

@@ -66,9 +66,10 @@ void TextureItemRenderer::renderTexture()
     if (!slot) return;
 
     // Check if it is a texture slot
-    if (slot && slot->type() == typeid(globjects::Texture *))
+    auto * textureSlot = dynamic_cast< Slot<globjects::Texture *> * >(slot);
+    if (textureSlot)
     {
-        texture = static_cast< Slot<globjects::Texture *> * >(slot)->value();
+        texture = textureSlot->value();
     }
 
     // Abort if texture is invalid

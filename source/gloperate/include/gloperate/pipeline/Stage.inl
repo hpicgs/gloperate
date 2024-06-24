@@ -32,16 +32,25 @@ template <typename T>
 std::vector<Input<T> *> Stage::inputs() const
 {
     auto result = std::vector<Input<T> *>{};
-    
+
     // We do not reserve a heuristically derived number of elements as we assume
     // the vector growing strategy would handle most cases efficiently
     // result.reserve(inputs().size() / 2);
-    
+
     for (auto input : inputs())
     {
-        if (input->type() == typeid(T))
+        auto * typedInput = dynamic_cast<Input<T> *>(input);
+
+        // [TODO] This workaround is currently needed on macos for Input<cppassist::FilePath>,
+        //        because the dynamic cast fails.
+        if (!typedInput && input->type() == typeid(T))
         {
-            result.push_back(static_cast<Input<T> *>(input));
+            typedInput = static_cast<Input<T> *>(input);
+        }
+
+        if (typedInput)
+        {
+            result.push_back(typedInput);
         }
     }
 
@@ -72,16 +81,25 @@ template <typename T>
 std::vector<Output<T> *> Stage::outputs() const
 {
     auto result = std::vector<Output<T> *>{};
-    
+
     // We do not reserve a heuristically derived number of elements as we assume
     // the vector growing strategy would handle most cases efficiently
     // result.reserve(outputs().size() / 2);
-    
+
     for (auto output : outputs())
     {
-        if (output->type() == typeid(T))
+        auto * typedOutput = dynamic_cast<Output<T> *>(output);
+
+        // [TODO] This workaround is currently needed on macos for Input<cppassist::FilePath>,
+        //        because the dynamic cast fails.
+        if (!typedOutput && output->type() == typeid(T))
         {
-            result.push_back(static_cast<Output<T> *>(output));
+            typedOutput = static_cast<Output<T> *>(input);
+        }
+
+        if (typedOutput)
+        {
+            result.push_back(typedOutput);
         }
     }
 
